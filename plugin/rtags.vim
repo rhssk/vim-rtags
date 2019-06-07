@@ -544,12 +544,17 @@ function! rtags#JumpToHandler(results, args)
         call rtags#DisplayResults(results)
     elseif len(results) == 1
         let [location; symbol_detail] = split(results[0], '\s\+')
-        let [jump_file, lnum, col; rest] = split(location, ':')
 
-        " Add location to the jumplist
-        normal! m'
-        if rtags#jumpToLocation(jump_file, lnum, col)
-            normal! zz
+        if join(results, ' ') !=# 'Not indexed'
+            let [jump_file, lnum, col; rest] = split(location, ':')
+
+            " Add location to the jumplist
+            normal! m'
+            if rtags#jumpToLocation(jump_file, lnum, col)
+                normal! zz
+            endif
+        else
+            echomsg 'Current file is not indexed'
         endif
     endif
 
